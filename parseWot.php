@@ -95,9 +95,8 @@ class parseWot {
 			}
 
 		}
-
+        fclose($fp);
 		$result_blocks = $this->get_identify($result_blocks);
-		fclose($fp);
 		$this->dumpjson($result_blocks, $filename_source,0);
 		return $result_blocks;
 	}
@@ -157,20 +156,15 @@ class parseWot {
 		if (!array_key_exists("datablock_battle_result", $result_blocks['common']) )
 			return $result_blocks;
 
-		foreach($result_blocks['datablock_battle_result']['players'] as $key => $value) {
-			$result_blocks['datablock_battle_result']['players'][$key]['platoonID'] = $result_blocks['datablock_battle_result']['players'][$key]['prebattleID'];
+		foreach($result_blocks['datablock_battle_result']['players'] as $wID => $player) {
+			$result_blocks['datablock_battle_result']['players'][$wID]['platoonID'] =$result_blocks['datablock_battle_result']['players'][$wID]['prebattleID'];
 			foreach ($result_blocks['datablock_battle_result']['vehicles'] as $vkey => $vvalue) {
-				if ( $result_blocks['datablock_battle_result']['vehicles'][$vkey]['accountDBID'] == $key ){
-		            $result_blocks['datablock_battle_result']['players'][$key]['vehicleid'] = $vkey;
+				if ( $vvalue[0]['accountDBID'] == $wID ){
+		            $result_blocks['datablock_battle_result']['players'][$wID]['vehicleid'] = $vkey;
 		            break;
 		        }
 			}
 		}
-
 		return $result_blocks;
-
 	}
 }
-
-
-?>
